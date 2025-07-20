@@ -1,5 +1,6 @@
 using static System.Math;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class King : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class King : MonoBehaviour
     private Quaternion startRotation;
     private Vector3 startPosition;
     [SerializeField] private GameManager GameManager;
+
     void Start()
     {
         startRotation = transform.rotation;
