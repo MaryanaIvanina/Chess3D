@@ -1,164 +1,52 @@
-using static System.Math;
 using UnityEngine;
 
-public class Pawn : MonoBehaviour
+public class Pawn : ChessPiece
 {
-    private float rotationAmount = 20f;
-    private float moveAmount = 1f;
-    private float pawnMoveAmount = 10f;
-    private bool isRotate = false;
-    private int stepCount;
-    private Quaternion startRotation;
-    private Vector3 startPosition;
-    [SerializeField] private GameManager GameManager;
-    [SerializeField] private PrefabSpawner prefabSpawner;
-    void Start()
+    private int moveCount = 0;
+
+    protected override bool IsLegalMovePattern(Vector3 from, Vector3 to)
     {
-        startRotation = transform.rotation;
-        startPosition = transform.position;
-        stepCount = 0;
-    }
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+        float direction = pieceColor == PieceColor.White ? 10 : -10;
+        float deltaZ = to.z - from.z;
+        float deltaX = Mathf.Abs(to.x - from.x);
+
+        ChessPiece targetPiece = GetPieceAtPosition(to);
+
+        // Рух вперед (без захоплення)
+        if (deltaX == 0 && targetPiece == null)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            if (deltaZ == direction) return true;
+            if (deltaZ == 2 * direction && moveCount == 0) return true;
+        }
+        // Захоплення по діагоналі
+        else if (deltaX == 10 && deltaZ == direction)
+            return targetPiece != null && targetPiece.pieceColor != pieceColor;
 
-            if (Physics.Raycast(ray, out hit))
+        return false;
+    }
+
+    private ChessPiece GetPieceAtPosition(Vector3 position)
+    {
+        ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
+        foreach (ChessPiece piece in allPieces)
+        {
+            if (Vector3.Distance(piece.transform.position, position) < 5f &&
+                piece.gameObject.activeInHierarchy)
             {
-                if (hit.transform == transform)
-                {
-                    if (!isRotate)
-                    {
-                        transform.Rotate(rotationAmount, 0, 0);
-                        transform.position += new Vector3(0, moveAmount, 0);
-                        isRotate = true;
-                    }
-                    else
-                    {
-                        transform.rotation = startRotation;
-                        transform.position -= new Vector3(0, moveAmount, 0);
-                        isRotate = false;
-                    }
-                }
-                else if (!isRotate)
-                {
-                    return;
-                }
-                else
-                {
-                    Vector3 newPosition = hit.point;
-                    float movement = newPosition.z - transform.position.z;
-                    float way = newPosition.x - transform.position.x;
-
-                    float pawnMoveUD = ((Abs(movement) / 5f) + 1f) / 2f;
-                    float pawnStepUD = pawnMoveUD - pawnMoveUD % 1f;
-
-                    float pawnMoveLR = ((Abs(way) / 5f) + 1f) / 2f;
-                    float pawnStepLR = pawnMoveLR - pawnMoveLR % 1f;
-
-                    transform.position -= new Vector3(0, moveAmount, 0);
-                    transform.rotation = startRotation;
-                    isRotate = false;
-
-                    Collider collider = GetComponent<Collider>();
-
-                    if (pawnStepUD == pawnStepLR && pawnStepUD == 1)
-                    {
-                        if (way > 0 && movement > 0)
-                        {
-                            transform.position += new Vector3(pawnMoveAmount, 0, pawnMoveAmount);
-
-                            collider.enabled = false;
-                            Ray pawnRay = new Ray(transform.position, transform.up);
-                            if (Physics.Raycast(pawnRay, out RaycastHit hitInfo))
-                            {
-                                if (gameObject.CompareTag("White") && hitInfo.collider.gameObject.CompareTag("Black"))
-                                {
-                                    hitInfo.collider.gameObject.SetActive(false);
-                                    stepCount++;
-                                    GameManager.Instance.SetActiveWhite();
-                                }
-                                else
-                                    transform.position += new Vector3(-pawnMoveAmount, 0, -pawnMoveAmount);
-                            }
-                            else
-                                transform.position += new Vector3(-pawnMoveAmount, 0, -pawnMoveAmount);
-                            collider.enabled = true;
-                        }
-                        else if (way < 0 && movement > 0)
-                        {
-                            transform.position += new Vector3(-pawnMoveAmount, 0, pawnMoveAmount);
-
-                            collider.enabled = false;
-                            Ray pawnRay = new Ray(transform.position, transform.up);
-                            if (Physics.Raycast(pawnRay, out RaycastHit hitInfo))
-                            {
-                                if (gameObject.CompareTag("White") && hitInfo.collider.gameObject.CompareTag("Black"))
-                                {
-                                    hitInfo.collider.gameObject.SetActive(false);
-                                    stepCount++;
-                                    GameManager.Instance.SetActiveWhite();
-                                }
-                                else
-                                    transform.position += new Vector3(pawnMoveAmount, 0, -pawnMoveAmount);
-                            }
-                            else
-                                transform.position += new Vector3(pawnMoveAmount, 0, -pawnMoveAmount);
-                            collider.enabled = true;
-                        }
-                    }
-                    else if (movement > 5f && movement < 2f * (pawnMoveAmount + 5f) && Abs(way) < 5)
-                    {
-                        if (movement < pawnMoveAmount + 5f)
-                        {
-                            transform.position += new Vector3(0, 0, pawnMoveAmount);
-
-                            collider.enabled = false;
-                            Ray pawnRay = new Ray(transform.position, transform.up);
-                            if (Physics.Raycast(pawnRay, out RaycastHit hitInfo))
-                                transform.position -= new Vector3(0, 0, pawnMoveAmount);
-                            else
-                            {
-                                stepCount++;
-                                GameManager.Instance.SetActiveWhite();
-                            }
-                            collider.enabled = true;
-                        }
-                        else
-                        {
-                            if (stepCount == 0 && movement < 2f * pawnMoveAmount + 5f)
-                            {
-                                transform.position += new Vector3(0, 0, 2f * pawnMoveAmount);
-
-                                collider.enabled = false;
-                                Ray pawnRay = new Ray(transform.position, transform.up);
-                                if (Physics.Raycast(pawnRay, out RaycastHit hitInfo))
-                                    transform.position -= new Vector3(0, -moveAmount, 2f * pawnMoveAmount);
-                                else
-                                {
-                                    stepCount++;
-                                    GameManager.Instance.SetActiveWhite();
-                                }
-                                collider.enabled = true;
-                            }
-                        }
-                    }
-                }
+                return piece;
             }
         }
-        if (transform.position.z == 75)
-        {
-            GameManager.position = transform.position;
-            GameManager.rotation = transform.rotation;
-            prefabSpawner.PawnEnd();
-            gameObject.SetActive(false);
-            GameManager.Instance.SetActiveWhite();
-        }
+        return null;
+    }
+
+    protected override void ExecuteMove(Vector3 targetPos)
+    {
+        base.ExecuteMove(targetPos);
+        moveCount++;
+
+        // Перевіряємо превращення пішака
+        float endRow = pieceColor == PieceColor.White ? 75f : 5f;
+        if (Mathf.Approximately(transform.position.z, endRow))
+            gameManager.StartPawnPromotion(this);
     }
 }
-
-
-
-

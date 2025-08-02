@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: af2d05ebdcca4a84c87872fa420dbec2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - queenPrefab: {instanceID: 0}
+  - rookPrefab: {instanceID: 0}
+  - bishopPrefab: {instanceID: 0}
+  - knightPrefab: {instanceID: 0}
+  - whitePawnPromotionUI: {instanceID: 0}
+  - blackPawnPromotionUI: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -315,6 +315,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 833621e4dd3908e4c9015a0c35f32d6b, type: 2}
+    - target: {fileID: 7512820800810865741, guid: db56b9cbf27ec6e49a2ae8221417ab7d, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8855853736573581763, guid: db56b9cbf27ec6e49a2ae8221417ab7d, type: 3}
       propertyPath: GameManager
       value: 
@@ -339,7 +343,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (1)
@@ -456,7 +460,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (7)
@@ -513,7 +517,6 @@ GameObject:
   - component: {fileID: 42890198}
   - component: {fileID: 42890197}
   - component: {fileID: 42890196}
-  - component: {fileID: 42890195}
   m_Layer: 0
   m_Name: BlackQueenButton
   m_TagString: Untagged
@@ -541,22 +544,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &42890195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 42890193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 1699158240}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &42890196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,9 +588,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 42890195}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyBlackPrefab
+      - m_Target: {fileID: 1861413793}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToQueen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -711,6 +698,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 833621e4dd3908e4c9015a0c35f32d6b, type: 2}
+    - target: {fileID: 7512820800810865741, guid: db56b9cbf27ec6e49a2ae8221417ab7d, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8855853736573581763, guid: db56b9cbf27ec6e49a2ae8221417ab7d, type: 3}
       propertyPath: GameManager
       value: 
@@ -749,8 +740,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af2d05ebdcca4a84c87872fa420dbec2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 0}
-  rotation: {x: 0, y: 0, z: 0, w: 0}
+  currentTurn: 0
+  isInCheck: 0
+  queenPrefab: {fileID: 1872036000}
+  rookPrefab: {fileID: 827265177}
+  bishopPrefab: {fileID: 317630359}
+  knightPrefab: {fileID: 523658141}
+  whitePawnPromotionUI: {fileID: 2110223740}
+  blackPawnPromotionUI: {fileID: 1861413789}
 --- !u!4 &288294545
 Transform:
   m_ObjectHideFlags: 0
@@ -993,13 +990,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.53803676, y: -0, z: -0, w: 0.84292144}
-  m_LocalPosition: {x: 41, y: 87, z: -10}
+  m_LocalRotation: {x: 0.68637735, y: -0, z: -0, w: 0.72724575}
+  m_LocalPosition: {x: 41, y: 106.9, z: 33}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 65.1, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 86.688, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1393,6 +1390,10 @@ PrefabInstance:
       propertyPath: GameManager
       value: 
       objectReference: {fileID: 288294544}
+    - target: {fileID: 6023395209499745540, guid: 1c2b69dac47802c4eb587aa3d1632b38, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8967649837468539933, guid: 1c2b69dac47802c4eb587aa3d1632b38, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -1410,6 +1411,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 423805696809583204, guid: a4a88dbe7cb45464dace7736cde21e93, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1916746201783364159, guid: a4a88dbe7cb45464dace7736cde21e93, type: 3}
       propertyPath: GameManager
       value: 
@@ -1488,7 +1493,6 @@ GameObject:
   - component: {fileID: 631561939}
   - component: {fileID: 631561938}
   - component: {fileID: 631561937}
-  - component: {fileID: 631561936}
   m_Layer: 0
   m_Name: BlackKnightButton
   m_TagString: Untagged
@@ -1516,22 +1520,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &631561936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 631561934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 1008387768}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &631561937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1576,9 +1564,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 631561936}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyBlackPrefab
+      - m_Target: {fileID: 1861413793}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToKnight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1831,7 +1819,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (5)
@@ -2076,7 +2064,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (6)
@@ -2269,7 +2257,6 @@ GameObject:
   - component: {fileID: 957703235}
   - component: {fileID: 957703234}
   - component: {fileID: 957703233}
-  - component: {fileID: 957703232}
   m_Layer: 0
   m_Name: QueenButton
   m_TagString: Untagged
@@ -2297,22 +2284,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &957703232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 957703230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 1872036000}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &957703233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2357,9 +2328,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 957703232}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyPrefab
+      - m_Target: {fileID: 2110223743}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToQueen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2407,11 +2378,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 957703230}
   m_CullTransparentMesh: 1
---- !u!1 &1008387768 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 699856991020244740, guid: db56b9cbf27ec6e49a2ae8221417ab7d, type: 3}
-  m_PrefabInstance: {fileID: 209911068}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1009566083
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2485,6 +2451,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 423805696809583204, guid: a4a88dbe7cb45464dace7736cde21e93, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1916746201783364159, guid: a4a88dbe7cb45464dace7736cde21e93, type: 3}
       propertyPath: GameManager
       value: 
@@ -2561,7 +2531,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (2)
@@ -2671,6 +2641,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 974947056398390509, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
+      propertyPath: pieceType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 974947056398390509, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1284530815240199586, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
       propertyPath: GameManager
       value: 
@@ -2778,7 +2756,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (3)
@@ -2844,7 +2822,6 @@ GameObject:
   - component: {fileID: 1283620637}
   - component: {fileID: 1283620636}
   - component: {fileID: 1283620635}
-  - component: {fileID: 1283620634}
   m_Layer: 0
   m_Name: KnightButton
   m_TagString: Untagged
@@ -2872,22 +2849,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1283620634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1283620632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 523658141}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &1283620635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2932,9 +2893,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1283620634}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyPrefab
+      - m_Target: {fileID: 2110223743}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToKnight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3133,7 +3094,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (7)
@@ -3199,7 +3160,6 @@ GameObject:
   - component: {fileID: 1461642015}
   - component: {fileID: 1461642014}
   - component: {fileID: 1461642013}
-  - component: {fileID: 1461642012}
   m_Layer: 0
   m_Name: RookButton
   m_TagString: Untagged
@@ -3227,22 +3187,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1461642012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1461642010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 827265177}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &1461642013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3287,9 +3231,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461642012}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyPrefab
+      - m_Target: {fileID: 2110223743}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToRook
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3337,47 +3281,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461642010}
   m_CullTransparentMesh: 1
---- !u!1 &1463089288 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8801080028404083875, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
-  m_PrefabInstance: {fileID: 1991022005840124419}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1463089293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1463089288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ce301547e54bce409e6e8d0977a9378, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isMate: 0
---- !u!1 &1476716839 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7334218843401819383, guid: a4a88dbe7cb45464dace7736cde21e93, type: 3}
-  m_PrefabInstance: {fileID: 1039480497}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1487292197 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8801080028404083875, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
-  m_PrefabInstance: {fileID: 1771899044}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1487292202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487292197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ce301547e54bce409e6e8d0977a9378, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isMate: 0
 --- !u!1001 &1552676495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3433,7 +3336,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (4)
@@ -3669,7 +3572,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (3)
@@ -3726,7 +3629,6 @@ GameObject:
   - component: {fileID: 1641701258}
   - component: {fileID: 1641701257}
   - component: {fileID: 1641701256}
-  - component: {fileID: 1641701255}
   m_Layer: 0
   m_Name: BlackRookButton
   m_TagString: Untagged
@@ -3754,22 +3656,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1641701255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1641701253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 1886596922}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &1641701256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3814,9 +3700,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1641701255}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyBlackPrefab
+      - m_Target: {fileID: 1861413793}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToRook
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3919,7 +3805,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (5)
@@ -3979,7 +3865,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (4)
@@ -4088,7 +3974,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (1)
@@ -4133,11 +4019,6 @@ CapsuleCollider:
   m_Height: 0.14218472
   m_Direction: 1
   m_Center: {x: 0.004449356, y: 0.08172508, z: 0}
---- !u!1 &1699158240 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2023622605870748898, guid: 1c2b69dac47802c4eb587aa3d1632b38, type: 3}
-  m_PrefabInstance: {fileID: 433360955}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1704234128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4193,6 +4074,14 @@ PrefabInstance:
     - target: {fileID: 700623914241834616, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 974947056398390509, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
+      propertyPath: pieceType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 974947056398390509, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
+      propertyPath: pieceColor
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1284530815240199586, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
       propertyPath: GameManager
@@ -4323,6 +4212,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1487531945213475582, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
+      propertyPath: pieceColor
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1893081592617362524, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -4382,10 +4275,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8801080028404083875, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1487292202}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
 --- !u!1 &1861413789
 GameObject:
@@ -4397,7 +4287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1861413792}
   - component: {fileID: 1861413791}
-  - component: {fileID: 1861413790}
+  - component: {fileID: 1861413793}
   m_Layer: 0
   m_Name: BlackChessPieces
   m_TagString: Untagged
@@ -4405,18 +4295,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1861413790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861413789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbad5f68f87916e47adb966f7d9d93de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1861413791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4466,15 +4344,22 @@ RectTransform:
   m_AnchoredPosition: {x: 3.3727, y: 20}
   m_SizeDelta: {x: 1586.6, y: 664.9831}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1861413793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861413789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfcc0a94b9046c947be68c8810daa39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1872036000 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2023622605870748898, guid: 1c2b69dac47802c4eb587aa3d1632b38, type: 3}
   m_PrefabInstance: {fileID: 5544730854137801925}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1886596922 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 212457602976015554, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
-  m_PrefabInstance: {fileID: 1704234128}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1898574573
 PrefabInstance:
@@ -4531,7 +4416,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn (2)
@@ -4591,7 +4476,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn (6)
@@ -4657,7 +4542,6 @@ GameObject:
   - component: {fileID: 1982554415}
   - component: {fileID: 1982554414}
   - component: {fileID: 1982554413}
-  - component: {fileID: 1982554412}
   m_Layer: 0
   m_Name: BishopButton
   m_TagString: Untagged
@@ -4685,22 +4569,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1982554412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1982554410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 317630359}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &1982554413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4745,9 +4613,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1982554412}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyPrefab
+      - m_Target: {fileID: 2110223743}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToBishop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4807,7 +4675,6 @@ GameObject:
   - component: {fileID: 2024882993}
   - component: {fileID: 2024882992}
   - component: {fileID: 2024882991}
-  - component: {fileID: 2024882990}
   m_Layer: 0
   m_Name: BlackBishopButton
   m_TagString: Untagged
@@ -4835,22 +4702,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 396, y: 664}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2024882990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2024882988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c733877341353444a856fa5a998ceaaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 1476716839}
-  _gameManager: {fileID: 288294544}
-  _prefabSpawner: {fileID: 2110223743}
-  _blackPrefabSpawner: {fileID: 1861413790}
 --- !u!114 &2024882991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4895,9 +4746,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2024882990}
-        m_TargetAssemblyTypeName: ChessPieces, Assembly-CSharp
-        m_MethodName: CopyBlackPrefab
+      - m_Target: {fileID: 1861413793}
+        m_TargetAssemblyTypeName: PawnPromotionUI, Assembly-CSharp
+        m_MethodName: PromoteToBishop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5157,7 +5008,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2110223740}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59cc9a9a965102549a6086f196bdd94f, type: 3}
+  m_Script: {fileID: 11500000, guid: dfcc0a94b9046c947be68c8810daa39a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2120607523
@@ -5216,6 +5067,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 974947056398390509, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
+      propertyPath: pieceType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1284530815240199586, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
       propertyPath: GameManager
       value: 
@@ -5240,7 +5095,7 @@ PrefabInstance:
     - target: {fileID: 4019893045124009383, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: blackPrefabSpawner
       value: 
-      objectReference: {fileID: 1861413790}
+      objectReference: {fileID: 0}
     - target: {fileID: 8340674691230964159, guid: 253b6ef2c9eff45459008b8ff5a1dfd1, type: 3}
       propertyPath: m_Name
       value: BlackPawn
@@ -5357,10 +5212,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8801080028404083875, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1463089293}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 577331a9a0324f94e9229b5abee86843, type: 3}
 --- !u!1001 &5182325828538801419
 PrefabInstance:
@@ -5417,7 +5269,7 @@ PrefabInstance:
     - target: {fileID: 144623181099496066, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: prefabSpawner
       value: 
-      objectReference: {fileID: 2110223743}
+      objectReference: {fileID: 0}
     - target: {fileID: 781777028550757780, guid: cbb3f25c00376864cb5512dee7413066, type: 3}
       propertyPath: m_Name
       value: Pawn
@@ -5647,6 +5499,10 @@ PrefabInstance:
     - target: {fileID: 700623914241834616, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 974947056398390509, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
+      propertyPath: pieceType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1284530815240199586, guid: 373f3c8b0ba6fd540854c7b60d5e59f8, type: 3}
       propertyPath: GameManager

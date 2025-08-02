@@ -81,10 +81,7 @@ PrefabInstance:
       addedObject: {fileID: 8952007454532664540}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fac679d9e8752a342b6956c9f1f11106, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4019893045124009383}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fac679d9e8752a342b6956c9f1f11106, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1363485485128323000}
+      addedObject: {fileID: 8432654829135408956}
   m_SourcePrefab: {fileID: 100100000, guid: fac679d9e8752a342b6956c9f1f11106, type: 3}
 --- !u!1 &8340674691230964159 stripped
 GameObject:
@@ -114,7 +111,7 @@ CapsuleCollider:
   m_Height: 0.14517918
   m_Direction: 1
   m_Center: {x: 0, y: 0.08749151, z: 0}
---- !u!114 &4019893045124009383
+--- !u!114 &8432654829135408956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,19 +120,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8340674691230964159}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f42cb26af38faf84488af88cf9526bc6, type: 3}
+  m_Script: {fileID: 11500000, guid: 29e105298ae353b40aeff0e1387734ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameManager: {fileID: 0}
---- !u!114 &1363485485128323000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8340674691230964159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aff1614a403f7c6479b84a84a039dd7f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  pieceColor: 1
+  pieceType: 0
+  rotationAmount: 10
+  moveUpAmount: 1
