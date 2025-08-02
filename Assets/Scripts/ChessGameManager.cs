@@ -45,7 +45,7 @@ public class ChessGameManager : MonoBehaviour
     {
         currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
         SetTurn(currentTurn);
-        CheckForCheck();
+        CheckForCheckmate();
     }
 
     private void SetTurn(PieceColor color)
@@ -58,14 +58,44 @@ public class ChessGameManager : MonoBehaviour
         }
     }
 
-    private void CheckForCheck()
+    private void CheckForCheckmate()
     {
         isInCheck = IsKingInCheck(currentTurn);
 
         if (isInCheck)
         {
-            Debug.Log($"{currentTurn} king is in check!");
+            if (!HasAnyValidMove())
+                Debug.Log($"{currentTurn} is in checkmate!");
+            else
+                Debug.Log($"{currentTurn} king is in check!");
         }
+        else
+        {
+            if (!HasAnyValidMove())
+                Debug.Log($"Stalemate! {currentTurn} has no valid moves but is not in check.");
+        }
+    }
+
+    private bool HasAnyValidMove()
+    {
+        ChessPiece[] alliedPieces = GetPiecesOfColor(currentTurn);
+        foreach (ChessPiece piece in alliedPieces)
+        {
+            for (int i = 5; i <= 75; i += 10)
+            {
+                for (int j = 5; j <= 75; j += 10)
+                {
+                    Vector3 targetPos = new Vector3(j, 5, i);
+                    if (piece.IsValidMove(piece.transform.position, targetPos, currentTurn) &&
+                        !WouldKingBeInCheck(currentTurn, piece, targetPos))
+                    {
+                        Debug.Log($"{piece.pieceColor} {piece} is valid.");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public bool IsKingInCheck(PieceColor kingColor)
@@ -93,16 +123,13 @@ public class ChessGameManager : MonoBehaviour
         foreach (ChessPiece piece in enemyPieces)
         {
             if (piece.gameObject.activeInHierarchy && CanPieceAttackPosition(piece, position))
-            {
-                Debug.Log($"{piece.pieceColor} {piece.pieceType} can attack position {position}");
                 return true;
-            }
         }
 
         return false;
     }
 
-    private ChessPiece[] GetPiecesOfColor(PieceColor color)
+    public ChessPiece[] GetPiecesOfColor(PieceColor color)
     {
         ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
         List<ChessPiece> colorPieces = new List<ChessPiece>();
@@ -121,7 +148,7 @@ public class ChessGameManager : MonoBehaviour
         if (piece.pieceType == PieceType.Pawn)
             return CanPawnAttack(piecePos, targetPos, piece.pieceColor);
         else
-            return piece.IsValidMove(piecePos, targetPos);
+            return piece.IsValidMove(piecePos, targetPos, piece.pieceColor);
     }
 
     private bool CanPawnAttack(Vector3 from, Vector3 to, PieceColor pawnColor)

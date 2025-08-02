@@ -28,10 +28,6 @@ public abstract class ChessPiece : MonoBehaviour
 
     protected virtual void Update()
     {
-        /*if (pieceType == PieceType.Queen)
-        {
-            Debug.Log($"{transform.position}");
-        }*/
         if (Input.GetMouseButtonDown(0) && IsMyTurn())
             HandleMouseClick();
     }
@@ -78,17 +74,17 @@ public abstract class ChessPiece : MonoBehaviour
     {
         Vector3 targetBoardPos = WorldToBoardPosition(targetWorldPos);
 
-        if (IsValidMove(transform.position, targetBoardPos) &&
+        if (IsValidMove(transform.position, targetBoardPos, pieceColor) &&
             !gameManager.WouldKingBeInCheck(pieceColor, this, targetBoardPos))
         {
             ExecuteMove(targetBoardPos);
         }
     }
 
-    public virtual bool IsValidMove(Vector3 from, Vector3 to)
+    public virtual bool IsValidMove(Vector3 from, Vector3 to, PieceColor currentColor)
     {
-        Debug.Log($"Is Path Blocked: {IsPathBlocked(from, to)}, Is Legal Move Pattern: {IsLegalMovePattern(from, to)}");
-        return !IsPathBlocked(from, to) && IsLegalMovePattern(from, to);
+        Debug.Log($"{pieceType} from {from} to {to}");
+        return !IsPathBlocked(from, to) && IsLegalMovePattern(from, to) && !IsPositionOccupied(currentColor, to);
     }
 
     protected abstract bool IsLegalMovePattern(Vector3 from, Vector3 to);
@@ -108,6 +104,22 @@ public abstract class ChessPiece : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    protected virtual bool IsPositionOccupied(PieceColor currentColor, Vector3 targetPos)
+    {
+        ChessPiece occupyingPiece = null;
+        ChessPiece[] alliedPieces = gameManager.GetPiecesOfColor(currentColor);
+
+        foreach (ChessPiece piece in alliedPieces)
+        {
+            if (Vector3.Distance(piece.transform.position, targetPos) < 5f && piece != this)
+            {
+                occupyingPiece = piece;
+                break;
+            }
+        }
+        return occupyingPiece != null && occupyingPiece.pieceColor == currentColor;
     }
 
     protected virtual void ExecuteMove(Vector3 targetPos)
