@@ -83,6 +83,7 @@ public abstract class ChessPiece : MonoBehaviour
 
     public virtual bool IsValidMove(Vector3 from, Vector3 to, PieceColor currentColor)
     {
+        Debug.Log($"{pieceType} from {from} to {to}");
         return !IsPathBlocked(from, to) && IsLegalMovePattern(from, to) && !IsPositionOccupied(currentColor, to);
     }
 
@@ -107,28 +108,38 @@ public abstract class ChessPiece : MonoBehaviour
 
     protected virtual bool IsPositionOccupied(PieceColor currentColor, Vector3 targetPos)
     {
-        ChessPiece occupyingPiece = GetPieceAtPosition(targetPos);
+        ChessPiece occupyingPiece = null;
+        ChessPiece[] alliedPieces = gameManager.GetPiecesOfColor(currentColor);
+
+        foreach (ChessPiece piece in alliedPieces)
+        {
+            if (Vector3.Distance(piece.transform.position, targetPos) < 5f && piece != this)
+            {
+                occupyingPiece = piece;
+                break;
+            }
+        }
         return occupyingPiece != null && occupyingPiece.pieceColor == currentColor;
     }
 
     protected virtual void ExecuteMove(Vector3 targetPos)
     {
-        ChessPiece capturedPiece = GetPieceAtPosition(targetPos);
-        Move(targetPos, capturedPiece);
-    }
-
-    public ChessPiece GetPieceAtPosition(Vector3 position)
-    {
+        ChessPiece capturedPiece = null;
         ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
+
         foreach (ChessPiece piece in allPieces)
         {
-            if (Vector3.Distance(piece.transform.position, position) < 5f &&
-                piece.gameObject.activeInHierarchy)
+            if (Vector3.Distance(piece.transform.position, targetPos) < 5f && piece != this)
             {
-                return piece;
+                capturedPiece = piece;
+                capturedPiece.gameObject.SetActive(false);
+                break;
             }
         }
-        return null;
+        if (capturedPiece != null && capturedPiece.pieceColor == pieceColor)
+            capturedPiece.gameObject.SetActive(true);
+        else
+            Move(targetPos);
     }
 
     protected bool IsMyTurn()
@@ -143,10 +154,8 @@ public abstract class ChessPiece : MonoBehaviour
         return new Vector3(x, transform.position.y, z);
     }
 
-    public void Move(Vector3 targetPos, ChessPiece capturedPiece)
+    protected void Move(Vector3 targetPos)
     {
-        if (capturedPiece != null)
-            capturedPiece.gameObject.SetActive(false);
         transform.position = targetPos;
         gameManager.SwitchTurn();
     }

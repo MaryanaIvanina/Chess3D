@@ -4,41 +4,21 @@ public class PawnPromotionUI : MonoBehaviour
 {
     public void PromoteToQueen()
     {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Queen, PieceColor.White);
+        ChessGameManager.Instance.PromotePawnTo(PieceType.Queen);
     }
 
     public void PromoteToRook()
     {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Rook, PieceColor.White);
+        ChessGameManager.Instance.PromotePawnTo(PieceType.Rook);
     }
 
     public void PromoteToBishop()
     {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Bishop, PieceColor.White);
+        ChessGameManager.Instance.PromotePawnTo(PieceType.Bishop);
     }
 
     public void PromoteToKnight()
     {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Knight, PieceColor.White);
-    }
-
-    public void PromoteToBlackQueen()
-    {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Queen, PieceColor.Black);
-    }
-
-    public void PromoteToBlackRook()
-    {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Rook, PieceColor.Black);
-    }
-
-    public void PromoteToBlackBishop()
-    {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Bishop, PieceColor.Black);
-    }
-
-    public void PromoteToBlackKnight()
-    {
-        ChessGameManager.Instance.PromotePawnTo(PieceType.Knight, PieceColor.Black);
+        ChessGameManager.Instance.PromotePawnTo(PieceType.Knight);
     }
 }

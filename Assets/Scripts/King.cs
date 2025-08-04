@@ -9,4 +9,11 @@ public class King : ChessPiece
 
         return deltaX <= 10 && deltaZ <= 10 && (deltaX + deltaZ > 0);
     }
+
+    public override bool IsValidMove(Vector3 from, Vector3 to, PieceColor currentColor)
+    {
+        if (!base.IsValidMove(from, to, pieceColor)) return false;
+
+        return !gameManager.WouldKingBeInCheck(pieceColor, this, to);
+    }
 }
