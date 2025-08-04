@@ -14,6 +14,10 @@ public class ChessGameManager : MonoBehaviour
     public GameObject rookPrefab;
     public GameObject bishopPrefab;
     public GameObject knightPrefab;
+    public GameObject blackQueenPrefab;
+    public GameObject blackRookPrefab;
+    public GameObject blackBishopPrefab;
+    public GameObject blackKnightPrefab;
 
     [Header("Promotion UI")]
     public GameObject whitePawnPromotionUI;
@@ -36,9 +40,7 @@ public class ChessGameManager : MonoBehaviour
     private void Start()
     {
         SetTurn(PieceColor.White);
-
-        if (whitePawnPromotionUI) whitePawnPromotionUI.SetActive(false);
-        if (blackPawnPromotionUI) blackPawnPromotionUI.SetActive(false);
+        HidePawnPromotionUI();
     }
 
     public void SwitchTurn()
@@ -89,7 +91,6 @@ public class ChessGameManager : MonoBehaviour
                     if (piece.IsValidMove(piece.transform.position, targetPos, currentTurn) &&
                         !WouldKingBeInCheck(currentTurn, piece, targetPos))
                     {
-                        Debug.Log($"{piece.pieceColor} {piece} is valid.");
                         return true;
                     }
                 }
@@ -144,45 +145,15 @@ public class ChessGameManager : MonoBehaviour
 
     private bool CanPieceAttackPosition(ChessPiece piece, Vector3 targetPos)
     {
-        Vector3 piecePos = piece.transform.position;
-        if (piece.pieceType == PieceType.Pawn)
-            return CanPawnAttack(piecePos, targetPos, piece.pieceColor);
-        else
-            return piece.IsValidMove(piecePos, targetPos, piece.pieceColor);
-    }
-
-    private bool CanPawnAttack(Vector3 from, Vector3 to, PieceColor pawnColor)
-    {
-        float direction = pawnColor == PieceColor.White ? 10 : -10;
-        float deltaZ = to.z - from.z;
-        float deltaX = Mathf.Abs(to.x - from.x);
-
-        return deltaX == 10 && deltaZ == direction;
+        return piece.IsValidMove(piece.transform.position, targetPos, piece.pieceColor);
     }
 
     public bool WouldKingBeInCheck(PieceColor kingColor, ChessPiece movingPiece, Vector3 toPos)
     {
-        ChessPiece capturedPiece = null;
-        ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
-
-        foreach (ChessPiece piece in allPieces)
-        {
-            if (Vector3.Distance(piece.transform.position, toPos) < 5f &&
-                piece != movingPiece && piece.gameObject.activeInHierarchy)
-            {
-                capturedPiece = piece;
-                break;
-            }
-        }
-
-        if (capturedPiece != null && capturedPiece.pieceColor == kingColor)
-            return false;
-
+        ChessPiece capturedPiece = movingPiece.GetPieceAtPosition(toPos);
         Vector3 originalPos = movingPiece.transform.position;
-
         movingPiece.transform.position = toPos;
-        if (capturedPiece != null)
-            capturedPiece.gameObject.SetActive(false);
+        if (capturedPiece != null) capturedPiece.gameObject.SetActive(false);
 
         Canvas.ForceUpdateCanvases();
         Physics.SyncTransforms();
@@ -190,8 +161,7 @@ public class ChessGameManager : MonoBehaviour
         bool wouldBeInCheck = IsKingInCheck(kingColor);
 
         movingPiece.transform.position = originalPos;
-        if (capturedPiece != null)
-            capturedPiece.gameObject.SetActive(true);
+        if (capturedPiece != null) capturedPiece.gameObject.SetActive(true);
 
         return wouldBeInCheck;
     }
@@ -200,59 +170,62 @@ public class ChessGameManager : MonoBehaviour
     {
         pawnToPromote = pawn;
 
-        // Показуємо відповідний UI в залежності від кольору пішака
         if (pawn.pieceColor == PieceColor.White)
-            if (whitePawnPromotionUI) whitePawnPromotionUI.SetActive(true);
+            whitePawnPromotionUI.SetActive(true);
         else
-            if (blackPawnPromotionUI) blackPawnPromotionUI.SetActive(true);
-
-        // Зупиняємо гру до вибору фігури
-        Time.timeScale = 0f;
+            blackPawnPromotionUI.SetActive(true);
     }
 
-    public void PromotePawnTo(PieceType newPieceType)
+    public void PromotePawnTo(PieceType newPieceType, PieceColor newPieceColor)
     {
         if (pawnToPromote == null) return;
 
         Vector3 position = pawnToPromote.transform.position;
         Quaternion rotation = pawnToPromote.transform.rotation;
-        PieceColor color = pawnToPromote.pieceColor;
 
         Destroy(pawnToPromote.gameObject);
 
-        GameObject prefab = GetPrefabForPieceType(newPieceType);
+        GameObject prefab = GetPrefabForPieceType(newPieceType, newPieceColor);
         if (prefab != null)
         {
             GameObject newPiece = Instantiate(prefab, position, rotation);
             ChessPiece piece = newPiece.GetComponent<ChessPiece>();
-            piece.pieceColor = color;
+            piece.pieceColor = newPieceColor;
             piece.pieceType = newPieceType;
 
-            if (newPieceType == PieceType.Knight)
+            if (piece.pieceType == PieceType.Knight)
             {
-                if (color == PieceColor.Black)
-                    newPiece.transform.Rotate(0, -180f, 0);
+                if (piece.pieceColor == PieceColor.Black)
+                    piece.transform.Rotate(0, -180, 0);
             }
         }
-
-        // Ховаємо UI
-        if (whitePawnPromotionUI) whitePawnPromotionUI.SetActive(false);
-        if (blackPawnPromotionUI) blackPawnPromotionUI.SetActive(false);
-
-        // Відновлюємо час гри
-        Time.timeScale = 1f;
+        HidePawnPromotionUI();
         pawnToPromote = null;
     }
 
-    private GameObject GetPrefabForPieceType(PieceType type)
+    private GameObject GetPrefabForPieceType(PieceType type, PieceColor color)
     {
         switch (type)
         {
-            case PieceType.Queen: return queenPrefab;
-            case PieceType.Rook: return rookPrefab;
-            case PieceType.Bishop: return bishopPrefab;
-            case PieceType.Knight: return knightPrefab;
+            case PieceType.Queen:
+                if (color == PieceColor.White) return queenPrefab;
+                else return blackQueenPrefab;
+            case PieceType.Rook:
+                if (color == PieceColor.White) return rookPrefab;
+                else return blackRookPrefab;
+            case PieceType.Bishop:
+                if (color == PieceColor.White) return bishopPrefab;
+                else return blackBishopPrefab;
+            case PieceType.Knight:
+                if (color == PieceColor.White) return knightPrefab;
+                else return blackKnightPrefab;
             default: return queenPrefab;
         }
+    }
+
+    private void HidePawnPromotionUI()
+    {
+        whitePawnPromotionUI.SetActive(false);
+        blackPawnPromotionUI.SetActive(false);
     }
 }
