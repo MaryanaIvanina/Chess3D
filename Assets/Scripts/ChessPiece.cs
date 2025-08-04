@@ -18,6 +18,7 @@ public abstract class ChessPiece : MonoBehaviour
     protected Quaternion startRotation;
     protected Vector3 startPosition;
     protected ChessGameManager gameManager;
+    public bool hasRookMoved = false;
 
     protected virtual void Start()
     {
@@ -95,13 +96,9 @@ public abstract class ChessPiece : MonoBehaviour
         float distance = Vector3.Distance(from, to);
         Vector3 direction = (to - from).normalized;
         Ray ray = new Ray(from + Vector3.up * 5, direction);
-        Debug.DrawRay(ray.origin, ray.direction * (distance - 5f), Color.red, 2);
 
         if (Physics.Raycast(ray, out RaycastHit hit, distance - 5f))
-        {
-            Debug.DrawRay(ray.origin, ray.direction * (distance - 5f), Color.green, 2);
             return true;
-        }
         return false;
     }
 
@@ -123,9 +120,7 @@ public abstract class ChessPiece : MonoBehaviour
         foreach (ChessPiece piece in allPieces)
         {
             if (Vector3.Distance(piece.transform.position, position) < 5f)
-            {
                 return piece;
-            }
         }
         return null;
     }
@@ -144,8 +139,7 @@ public abstract class ChessPiece : MonoBehaviour
 
     public void Move(Vector3 targetPos, ChessPiece capturedPiece)
     {
-        if (capturedPiece != null)
-            capturedPiece.gameObject.SetActive(false);
+        if (capturedPiece != null) capturedPiece.gameObject.SetActive(false);
         transform.position = targetPos;
         gameManager.SwitchTurn();
     }
