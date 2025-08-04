@@ -12,31 +12,11 @@ public class Pawn : ChessPiece
 
         ChessPiece targetPiece = GetPieceAtPosition(to);
 
-        // Рух вперед (без захоплення)
         if (deltaX == 0 && targetPiece == null)
-        {
-            if (deltaZ == direction) return true;
-            if (deltaZ == 2 * direction && moveCount == 0) return true;
-        }
-        // Захоплення по діагоналі
+            return (deltaZ == direction) || (deltaZ == 2 * direction && moveCount == 0);
         else if (deltaX == 10 && deltaZ == direction)
             return targetPiece != null && targetPiece.pieceColor != pieceColor;
-
-        return false;
-    }
-
-    private ChessPiece GetPieceAtPosition(Vector3 position)
-    {
-        ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
-        foreach (ChessPiece piece in allPieces)
-        {
-            if (Vector3.Distance(piece.transform.position, position) < 5f &&
-                piece.gameObject.activeInHierarchy)
-            {
-                return piece;
-            }
-        }
-        return null;
+        else return false;
     }
 
     protected override void ExecuteMove(Vector3 targetPos)
@@ -44,7 +24,6 @@ public class Pawn : ChessPiece
         base.ExecuteMove(targetPos);
         moveCount++;
 
-        // Перевіряємо превращення пішака
         float endRow = pieceColor == PieceColor.White ? 75f : 5f;
         if (Mathf.Approximately(transform.position.z, endRow))
             gameManager.StartPawnPromotion(this);
