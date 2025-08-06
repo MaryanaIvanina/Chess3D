@@ -23,6 +23,9 @@ public class ChessGameManager : MonoBehaviour
     public GameObject whitePawnPromotionUI;
     public GameObject blackPawnPromotionUI;
 
+    [Header("Camera Switch")]
+    [SerializeField] private SwitchCamera _switchCamera;
+
     private Pawn pawnToPromote;
 
     private void Awake()
@@ -48,6 +51,9 @@ public class ChessGameManager : MonoBehaviour
         currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
         SetTurn(currentTurn);
         CheckForCheckmate();
+        if (currentTurn == PieceColor.White) _switchCamera.cameraIndex = 0;
+        else _switchCamera.cameraIndex = 1;
+        _switchCamera.SwitchCameraPosition();
     }
 
     private void SetTurn(PieceColor color)
