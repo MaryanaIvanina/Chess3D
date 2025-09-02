@@ -26,6 +26,15 @@ public class ChessGameManager : MonoBehaviour
     [Header("Camera Switch")]
     [SerializeField] private SwitchCamera _switchCamera;
 
+    [Header("Checkmate Message")]
+    public GameObject whiteKingIsInCheck;
+    public GameObject blackKingIsInCheck;
+    public GameObject whiteCheckmate;
+    public GameObject blackCheckmate;
+    public GameObject checkmate;
+    [SerializeField] private Animator leftStar;
+    [SerializeField] private Animator rightStar;
+
     private Pawn pawnToPromote;
 
     private void Awake()
@@ -44,6 +53,7 @@ public class ChessGameManager : MonoBehaviour
     {
         SetTurn(PieceColor.White);
         HidePromotionUI();
+        HideCheckmateMessage();
     }
 
     public void SwitchTurn()
@@ -73,15 +83,27 @@ public class ChessGameManager : MonoBehaviour
         if (isInCheck)
         {
             if (!HasAnyValidMove())
-                Debug.Log($"{currentTurn} is in checkmate!");
+            {
+                checkmate.SetActive(true);
+                leftStar.SetBool("Checkmate", checkmate.activeInHierarchy);
+                rightStar.SetBool("Checkmate", checkmate.activeInHierarchy);
+                if (currentTurn == PieceColor.White)
+                    whiteCheckmate.SetActive(true);
+                else
+                    blackCheckmate.SetActive(true);
+            }
             else
-                Debug.Log($"{currentTurn} king is in check!");
+            {
+                if (currentTurn == PieceColor.White)
+                    whiteKingIsInCheck.SetActive(true);
+                else
+                    blackKingIsInCheck.SetActive(true);
+            }
         }
-        else
-        {
-            if (!HasAnyValidMove())
+        else if (!HasAnyValidMove())
                 Debug.Log($"Stalemate! {currentTurn} has no valid moves but is not in check.");
-        }
+        else
+            HideCheckmateMessage();
     }
 
     private bool HasAnyValidMove()
@@ -230,5 +252,14 @@ public class ChessGameManager : MonoBehaviour
     {
         whitePawnPromotionUI.SetActive(false);
         blackPawnPromotionUI.SetActive(false);
+    }
+
+    private void HideCheckmateMessage()
+    {
+        whiteKingIsInCheck.SetActive(false);
+        blackKingIsInCheck.SetActive(false);
+        whiteCheckmate.SetActive(false);
+        blackCheckmate.SetActive(false);
+        checkmate.SetActive(false);
     }
 }
