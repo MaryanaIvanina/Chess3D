@@ -34,6 +34,8 @@ public class ChessGameManager : MonoBehaviour
     public GameObject checkmate;
     [SerializeField] private Animator leftStar;
     [SerializeField] private Animator rightStar;
+    public GameObject stalemate;
+    public GameObject toMainMenu;
 
     private Pawn pawnToPromote;
 
@@ -101,7 +103,10 @@ public class ChessGameManager : MonoBehaviour
             }
         }
         else if (!HasAnyValidMove())
-                Debug.Log($"Stalemate! {currentTurn} has no valid moves but is not in check.");
+        {
+            stalemate.SetActive(true);
+            toMainMenu.SetActive(true);
+        }
         else
             HideCheckmateMessage();
     }
@@ -261,5 +266,6 @@ public class ChessGameManager : MonoBehaviour
         whiteCheckmate.SetActive(false);
         blackCheckmate.SetActive(false);
         checkmate.SetActive(false);
+        stalemate.SetActive(false);
     }
 }
