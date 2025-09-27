@@ -1,20 +1,18 @@
 # Chess3D
-Chess3D is a 3D chess game for Windows, developed in Unity using C#.
+Chess3D is an improved version of my coursework project [Chess](https://github.com/.../Chess](https://github.com/MaryanaIvanina/Chess)).  
+It was developed as a standalone project with extended functionality, redesigned visuals, and a cleaner codebase.
 
-## Features
-- Menu and Navigation
-  - Main menu with "Play" and "Game Rules" options.
-  - Rules pages with left/right navigation arrows.
-- Gameplay
-  - Immersive 3D room with a chessboard on a coffee table.
-  - Interactive chess pieces that follow standard chess rules.
-- In-Game UI
-  - "Game Rules" button accessible anytime.
-  - "Camera" button to change the viewing angle.
-  - "End Game" button to reset the board and return to the main menu.
-- Game States
-  - Notifications for check, checkmate, and stalemate.
-  - "Back to Main Menu" button after the game ends.
+## Implemented Features
+- Full 8x8 chessboard with all pieces.
+- Correct move logic for every piece according to chess rules.
+- Turn-based gameplay (white → black).
+- Piece capturing mechanics.
+- Castling.
+- Switching camera views (3 predefined positions).
+- Built-in rules of chess.
+- Ability to end the game anytime.
+- **Check, checkmate, and stalemate detection.**
+- **Pawn promotion (choice of a new piece when reaching the last rank).**
 
 ## Technologies Used
 - **Unity (C#)** — core gameplay and mechanics.  
