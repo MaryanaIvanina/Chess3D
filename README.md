@@ -1,5 +1,5 @@
 # Chess3D
-Chess3D is an improved version of my coursework project [Chess](https://github.com/.../Chess](https://github.com/MaryanaIvanina/Chess)).  
+Chess3D is an improved version of my coursework project [Chess](https://github.com/MaryanaIvanina/Chess).  
 It was developed as a standalone project with extended functionality, redesigned visuals, and a cleaner codebase.
 
 ## Implemented Features
