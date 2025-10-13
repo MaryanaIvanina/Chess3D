@@ -35,27 +35,19 @@ public class ChessGameManager : MonoBehaviour
     [SerializeField] private Animator leftStar;
     [SerializeField] private Animator rightStar;
     public GameObject stalemate;
-    public GameObject toMainMenu;
+    public GameObject stars;
 
     private Pawn pawnToPromote;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     private void Start()
     {
         SetTurn(PieceColor.White);
-        HidePromotionUI();
-        HideCheckmateMessage();
     }
 
     public void SwitchTurn()
@@ -63,9 +55,9 @@ public class ChessGameManager : MonoBehaviour
         currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
         SetTurn(currentTurn);
         CheckForCheckmate();
-        if (currentTurn == PieceColor.White) _switchCamera.cameraIndex = 0;
+        /*if (currentTurn == PieceColor.White) _switchCamera.cameraIndex = 0;
         else _switchCamera.cameraIndex = 1;
-        _switchCamera.SwitchCameraPosition();
+        _switchCamera.SwitchCameraPosition();*/
     }
 
     private void SetTurn(PieceColor color)
@@ -87,28 +79,19 @@ public class ChessGameManager : MonoBehaviour
             if (!HasAnyValidMove())
             {
                 checkmate.SetActive(true);
+                stars.SetActive(true);
                 leftStar.SetBool("Checkmate", checkmate.activeInHierarchy);
                 rightStar.SetBool("Checkmate", checkmate.activeInHierarchy);
-                if (currentTurn == PieceColor.White)
-                    whiteCheckmate.SetActive(true);
-                else
-                    blackCheckmate.SetActive(true);
+                (currentTurn == PieceColor.White ? whiteCheckmate : blackCheckmate).SetActive(true);
             }
-            else
-            {
-                if (currentTurn == PieceColor.White)
-                    whiteKingIsInCheck.SetActive(true);
-                else
-                    blackKingIsInCheck.SetActive(true);
-            }
+            else (currentTurn == PieceColor.White ? whiteKingIsInCheck : blackKingIsInCheck).SetActive(true);
         }
         else if (!HasAnyValidMove())
         {
             stalemate.SetActive(true);
-            toMainMenu.SetActive(true);
+            checkmate.SetActive(true);
         }
-        else
-            HideCheckmateMessage();
+        else HideCheckmateMessage();
     }
 
     private bool HasAnyValidMove()
@@ -204,11 +187,7 @@ public class ChessGameManager : MonoBehaviour
     {
         pawnToPromote = pawn;
 
-        if (pawn.pieceColor == PieceColor.White)
-            whitePawnPromotionUI.SetActive(true);
-        else
-            blackPawnPromotionUI.SetActive(true);
-
+        (pawn.pieceColor == PieceColor.White ? whitePawnPromotionUI : blackPawnPromotionUI).SetActive(true);
     }
 
     public void PromotePawnTo(PieceType newPieceType, PieceColor newPieceColor)
@@ -237,18 +216,10 @@ public class ChessGameManager : MonoBehaviour
     {
         switch (type)
         {
-            case PieceType.Queen:
-                if (color == PieceColor.White) return queenPrefab;
-                else return blackQueenPrefab;
-            case PieceType.Rook:
-                if (color == PieceColor.White) return rookPrefab;
-                else return blackRookPrefab;
-            case PieceType.Bishop:
-                if (color == PieceColor.White) return bishopPrefab;
-                else return blackBishopPrefab;
-            case PieceType.Knight:
-                if (color == PieceColor.White) return knightPrefab;
-                else return blackKnightPrefab;
+            case PieceType.Queen: return (color == PieceColor.White ? queenPrefab : blackQueenPrefab);
+            case PieceType.Rook: return (color == PieceColor.White ? rookPrefab : blackRookPrefab);
+            case PieceType.Bishop: return (color == PieceColor.White ? bishopPrefab : blackBishopPrefab);
+            case PieceType.Knight: return (color == PieceColor.White ? knightPrefab : blackKnightPrefab);
             default: return queenPrefab;
         }
     }
@@ -263,9 +234,5 @@ public class ChessGameManager : MonoBehaviour
     {
         whiteKingIsInCheck.SetActive(false);
         blackKingIsInCheck.SetActive(false);
-        whiteCheckmate.SetActive(false);
-        blackCheckmate.SetActive(false);
-        checkmate.SetActive(false);
-        stalemate.SetActive(false);
     }
 }

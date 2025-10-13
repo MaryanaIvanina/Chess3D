@@ -56,10 +56,7 @@ public abstract class ChessPiece : MonoBehaviour
     private void SelectPiece()
     {
         isSelected = true;
-        if (pieceColor == PieceColor.Black)
-            transform.Rotate(-rotationAmount, 0, 0);
-        else
-            transform.Rotate(rotationAmount, 0, 0);
+        transform.Rotate((pieceColor == PieceColor.Black ? -rotationAmount : rotationAmount), 0, 0);
 
         transform.position += new Vector3(0, moveUpAmount, 0);
     }
