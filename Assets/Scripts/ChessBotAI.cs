@@ -5,7 +5,7 @@ using System.Linq;
 public class ChessBotAI : MonoBehaviour
 {
     public PieceColor botColor = PieceColor.Black;
-    public int searchDepth = 3;
+    public int searchDepth = 2;
 
     private ChessGameManager gameManager;
     private bool isThinking = false;
@@ -59,7 +59,7 @@ public class ChessBotAI : MonoBehaviour
         foreach (var m in moves)
         {
             ApplyMoveSimulated(m, out SimState simState);
-
+            Debug.Log($"Evaluating move: {m.piece.pieceType} from {m.from} to {m.to}");
             float value = Minimax(simState, searchDepth - 1, botColor == PieceColor.White ? false : true, float.NegativeInfinity, float.PositiveInfinity);
 
             UndoSimulated(simState);
@@ -149,8 +149,8 @@ public class ChessBotAI : MonoBehaviour
             bool inCheck = gameManager.IsKingInCheck(sideToMove);
             if (inCheck)
             {
-                if (sideToMove == botColor) return float.NegativeInfinity / 2f; // worst for bot
-                else return float.PositiveInfinity / 2f; // best for bot
+                if (sideToMove == botColor) return float.NegativeInfinity;
+                else return float.PositiveInfinity;
             }
             else return 0f;
         }
@@ -161,6 +161,7 @@ public class ChessBotAI : MonoBehaviour
             foreach (var m in moves)
             {
                 ApplyMoveSimulated(m, out SimState s);
+                Debug.Log($"Maximizing: Depth {depth}, Move {m.piece.pieceType} from {m.from} to {m.to}");
                 float eval = Minimax(s, depth - 1, false, alpha, beta);
                 UndoSimulated(s);
 
@@ -176,6 +177,7 @@ public class ChessBotAI : MonoBehaviour
             foreach (var m in moves)
             {
                 ApplyMoveSimulated(m, out SimState s);
+                Debug.Log($"Minimizing: Depth {depth}, Move {m.piece.pieceType} from {m.from} to {m.to}");
                 float eval = Minimax(s, depth - 1, true, alpha, beta);
                 UndoSimulated(s);
 
@@ -191,7 +193,7 @@ public class ChessBotAI : MonoBehaviour
     {
         float score = 0f;
 
-        ChessPiece[] allPieces = FindObjectsOfType<ChessPiece>();
+        ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
         int whiteMaterial = 0;
         int blackMaterial = 0;
 
