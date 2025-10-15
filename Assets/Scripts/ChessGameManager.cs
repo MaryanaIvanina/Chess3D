@@ -8,6 +8,7 @@ public class ChessGameManager : MonoBehaviour
     [Header("Game State")]
     public PieceColor currentTurn = PieceColor.White;
     public bool isInCheck = false;
+    public ChessBotAI _chessBotAI;
 
     [Header("Promotion")]
     public GameObject queenPrefab;
@@ -48,6 +49,7 @@ public class ChessGameManager : MonoBehaviour
     private void Start()
     {
         SetTurn(PieceColor.White);
+        _chessBotAI.enabled = (GameMode.Instance.gameMode == 1);
     }
 
     public void SwitchTurn()
@@ -55,9 +57,11 @@ public class ChessGameManager : MonoBehaviour
         currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
         SetTurn(currentTurn);
         CheckForCheckmate();
-        /*if (currentTurn == PieceColor.White) _switchCamera.cameraIndex = 0;
-        else _switchCamera.cameraIndex = 1;
-        _switchCamera.SwitchCameraPosition();*/
+        if (GameMode.Instance.gameMode == 2)
+        {
+            _switchCamera.cameraIndex = currentTurn == PieceColor.White ? 0 : 1;
+            _switchCamera.SwitchCameraPosition();
+        }
     }
 
     private void SetTurn(PieceColor color)
