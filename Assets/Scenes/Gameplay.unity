@@ -2144,7 +2144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   botColor: 1
-  searchDepth: 1
+  searchDepth: 2
 --- !u!4 &398904255
 Transform:
   m_ObjectHideFlags: 0

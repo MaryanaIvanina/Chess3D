@@ -59,7 +59,8 @@ public class ChessBotAI : MonoBehaviour
         foreach (var m in moves)
         {
             ApplyMoveSimulated(m, out SimState simState);
-            float value = Minimax(simState, searchDepth - 1, botColor == PieceColor.White ? false : true, float.NegativeInfinity, float.PositiveInfinity);
+
+            float value = Minimax(simState, searchDepth - 1, botColor == PieceColor.White ? true : false, float.NegativeInfinity, float.PositiveInfinity);
 
             UndoSimulated(simState);
 
