@@ -59,7 +59,6 @@ public class ChessBotAI : MonoBehaviour
         foreach (var m in moves)
         {
             ApplyMoveSimulated(m, out SimState simState);
-            Debug.Log($"Evaluating move: {m.piece.pieceType} from {m.from} to {m.to}");
             float value = Minimax(simState, searchDepth - 1, botColor == PieceColor.White ? false : true, float.NegativeInfinity, float.PositiveInfinity);
 
             UndoSimulated(simState);
@@ -82,18 +81,18 @@ public class ChessBotAI : MonoBehaviour
 
         ChessPiece[] pieces = gameManager.GetPiecesOfColor(color);
 
-        for (int i = 5; i <= 75; i += 10)
+        foreach (var piece in pieces)
         {
-            for (int j = 5; j <= 75; j += 10)
-            {
-                Vector3 targetPos = new Vector3(j, 5, i);
+            if (!piece.gameObject.activeInHierarchy) continue;
 
-                foreach (var piece in pieces)
+            for (int i = 5; i <= 75; i += 10)
+            {
+                for (int j = 5; j <= 75; j += 10)
                 {
-                    if (!piece.gameObject.activeInHierarchy) continue;
+                    Vector3 targetPos = new Vector3(j, 5, i);
 
                     if (piece.IsValidMove(piece.transform.position, targetPos, color) &&
-                        !gameManager.WouldKingBeInCheck(color, piece, targetPos))
+                    !gameManager.WouldKingBeInCheck(color, piece, targetPos))
                     {
                         var capt = piece.GetPieceAtPosition(targetPos);
                         list.Add(new MoveCandidate
@@ -107,7 +106,6 @@ public class ChessBotAI : MonoBehaviour
                 }
             }
         }
-
         return list;
     }
 
@@ -161,7 +159,6 @@ public class ChessBotAI : MonoBehaviour
             foreach (var m in moves)
             {
                 ApplyMoveSimulated(m, out SimState s);
-                Debug.Log($"Maximizing: Depth {depth}, Move {m.piece.pieceType} from {m.from} to {m.to}");
                 float eval = Minimax(s, depth - 1, false, alpha, beta);
                 UndoSimulated(s);
 
@@ -177,7 +174,6 @@ public class ChessBotAI : MonoBehaviour
             foreach (var m in moves)
             {
                 ApplyMoveSimulated(m, out SimState s);
-                Debug.Log($"Minimizing: Depth {depth}, Move {m.piece.pieceType} from {m.from} to {m.to}");
                 float eval = Minimax(s, depth - 1, true, alpha, beta);
                 UndoSimulated(s);
 

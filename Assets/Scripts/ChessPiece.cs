@@ -81,7 +81,9 @@ public abstract class ChessPiece : MonoBehaviour
 
     public virtual bool IsValidMove(Vector3 from, Vector3 to, PieceColor currentColor)
     {
-        return !IsPathBlocked(from, to) && IsLegalMovePattern(from, to) && !IsPositionOccupied(currentColor, to);
+        if (IsLegalMovePattern(from, to) && !IsPositionOccupied(currentColor, to))
+            return !IsPathBlocked(from, to);
+        return false;
     }
 
     protected abstract bool IsLegalMovePattern(Vector3 from, Vector3 to);
