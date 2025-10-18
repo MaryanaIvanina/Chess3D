@@ -4,7 +4,7 @@ using System.Linq;
 
 public class ChessBotAI : MonoBehaviour
 {
-    public PieceColor botColor = PieceColor.Black;
+    public PieceColor botColor;
     public int searchDepth = 1;
 
     private ChessGameManager gameManager;
@@ -28,6 +28,7 @@ public class ChessBotAI : MonoBehaviour
     private void Start()
     {
         gameManager = ChessGameManager.Instance;
+        botColor = GameMode.Instance.botColor == 1 ? PieceColor.White : PieceColor.Black;
     }
 
     private void Update()
@@ -59,7 +60,6 @@ public class ChessBotAI : MonoBehaviour
 
         foreach (var m in moves)
         {
-            Debug.Log($""+m.piece.pieceColor + " " + m.piece.pieceType + " ");
             ApplyMoveSimulated(m, out SimState simState);
 
             float value = Minimax(simState, searchDepth - 1, botColor == PieceColor.White ? true : false, float.NegativeInfinity, float.PositiveInfinity);

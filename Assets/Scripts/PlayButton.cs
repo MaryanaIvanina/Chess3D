@@ -15,6 +15,7 @@ public class PlayButton : MonoBehaviour
     public void OnBotModeButtonClicked()
     {
         _gameMode.gameMode = 1;
+        _gameMode.botColor = Random.Range(1, 3);
     }
     public void OnThisDeviceButtonClicked()
     {

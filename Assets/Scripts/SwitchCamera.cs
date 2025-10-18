@@ -7,6 +7,10 @@ public class SwitchCamera : MonoBehaviour
 
     private void Start()
     {
+        if(GameMode.Instance.gameMode == 2)
+            cameraIndex = 0;
+        else if(GameMode.Instance.gameMode == 1)
+            cameraIndex = GameMode.Instance.botColor == 1 ? 1 : 0;
         SwitchCameraPosition();
     }
 

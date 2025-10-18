@@ -13,4 +13,5 @@ public class GameMode : MonoBehaviour
         else Destroy(gameObject);
     }
     public int gameMode = 0;
+    public int botColor = 0;
 }
