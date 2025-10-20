@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Photon.Pun;
 
-public class ChessGameManager : MonoBehaviour
+public class ChessGameManager : MonoBehaviourPun
 {
     public static ChessGameManager Instance { get; private set; }
 
@@ -55,6 +56,15 @@ public class ChessGameManager : MonoBehaviour
     public void SwitchTurn()
     {
         currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+        {
+            photonView.RPC("SyncTurn", RpcTarget.All, currentTurn == PieceColor.White);
+        }
+        else
+        {
+            SetTurn(currentTurn);
+        }
+
         SetTurn(currentTurn);
         CheckForCheckmate();
         if (GameMode.Instance.gameMode == 2)
@@ -63,7 +73,13 @@ public class ChessGameManager : MonoBehaviour
             _switchCamera.SwitchCameraPosition();
         }
     }
-
+    [PunRPC]
+    public void SyncTurn(bool isWhiteTurn)
+    {
+        currentTurn = isWhiteTurn ? PieceColor.White : PieceColor.Black;
+        SetTurn(currentTurn);
+        CheckForCheckmate();
+    }
     private void SetTurn(PieceColor color)
     {
         ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);

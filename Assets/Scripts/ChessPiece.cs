@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Photon.Pun;
 
 public enum PieceColor { White, Black }
 public enum PieceType { Pawn, Rook, Knight, Bishop, Queen, King }
 
-public abstract class ChessPiece : MonoBehaviour
+public abstract class ChessPiece : MonoBehaviourPun 
 {
     [Header("Piece Settings")]
     public PieceColor pieceColor;
@@ -57,7 +58,6 @@ public abstract class ChessPiece : MonoBehaviour
     {
         isSelected = true;
         transform.Rotate((pieceColor == PieceColor.Black ? -rotationAmount : rotationAmount), 0, 0);
-
         transform.position += new Vector3(0, moveUpAmount, 0);
     }
 
@@ -92,17 +92,17 @@ public abstract class ChessPiece : MonoBehaviour
     {
         if (pieceType == PieceType.Knight) return false;
 
-        Vector3 direction = (to - from).normalized * 10f;
-        Vector3 current = from + direction;
+        float distance = Vector3.Distance(from, to);
+        Vector3 direction = (to - from).normalized;
+        Ray ray = new Ray(from + Vector3.up * 5, direction);
 
-        while (Vector3.Distance(current, to) > 5f)
+        if (Physics.Raycast(ray, out RaycastHit hit, distance - 5f))
+            return true;
+        else
         {
-            if (GetPieceAtPosition(current) != null)
-                return true;
-            current += direction;
+            Debug.DrawRay(ray.origin, direction * (distance - 5f), Color.green, 10f);
+            return false;
         }
-
-        return false;
     }
 
     protected virtual bool IsPositionOccupied(PieceColor currentColor, Vector3 targetPos)
@@ -130,6 +130,15 @@ public abstract class ChessPiece : MonoBehaviour
 
     protected bool IsMyTurn()
     {
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+        {
+            bool isMasterClient = PhotonNetwork.IsMasterClient;
+            bool canMove = (isMasterClient && pieceColor == PieceColor.White) ||
+                          (!isMasterClient && pieceColor == PieceColor.Black);
+
+            return canMove && gameManager.currentTurn == pieceColor;
+        }
+
         return gameManager.currentTurn == pieceColor && enabled;
     }
 
@@ -142,8 +151,39 @@ public abstract class ChessPiece : MonoBehaviour
 
     public void Move(Vector3 targetPos, ChessPiece capturedPiece)
     {
-        if (capturedPiece != null) capturedPiece.gameObject.SetActive(false);
+        if (capturedPiece != null)
+            capturedPiece.gameObject.SetActive(false);
+
         transform.position = targetPos;
+
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+        {
+            int capturedViewID = -1;
+            if (capturedPiece != null)
+            {
+                PhotonView capturedView = capturedPiece.GetComponent<PhotonView>();
+                if (capturedView != null)
+                    capturedViewID = capturedView.ViewID;
+            }
+
+            photonView.RPC("SyncMove", RpcTarget.Others, targetPos, capturedViewID);
+        }
+
         gameManager.SwitchTurn();
     }
+
+    [PunRPC]
+    public void SyncMove(Vector3 targetPos, int capturedViewID)
+    {
+        if (capturedViewID != -1)
+        {
+            PhotonView capturedView = PhotonView.Find(capturedViewID);
+            if (capturedView != null)
+                capturedView.gameObject.SetActive(false);
+        }
+
+        transform.position = targetPos;
+        ChessGameManager.Instance.SwitchTurn();
+    }
+
 }

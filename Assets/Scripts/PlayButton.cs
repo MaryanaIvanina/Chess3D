@@ -24,5 +24,6 @@ public class PlayButton : MonoBehaviour
     public void OnMultiplayerButtonClicked()
     {
         _gameMode.gameMode = 3;
+        SceneManager.LoadScene("LobbyScene");
     }
 }
