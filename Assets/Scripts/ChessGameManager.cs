@@ -10,6 +10,7 @@ public class ChessGameManager : MonoBehaviourPun
     public PieceColor currentTurn = PieceColor.White;
     public bool isInCheck = false;
     public ChessBotAI _chessBotAI;
+    public PieceColor localPlayerColor;
 
     [Header("Promotion")]
     public GameObject queenPrefab;
@@ -50,9 +51,50 @@ public class ChessGameManager : MonoBehaviourPun
 
     private void Start()
     {
-        SetTurn(PieceColor.White);
         _chessBotAI.enabled = (GameMode.Instance.gameMode == 1);
+
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+            InitializeMultiplayerGame();
+        else
+            SetTurn(PieceColor.White);
     }
+
+
+    public void InitializeMultiplayerGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PieceColor masterColor = (Random.value > 0.5f) ? PieceColor.White : PieceColor.Black;
+            photonView.RPC("RPC_SetPlayerColors", RpcTarget.All, (int)masterColor);
+        }
+    }
+
+    [PunRPC]
+    private void RPC_SetPlayerColors(int masterColorInt)
+    {
+        PieceColor masterColor = (PieceColor)masterColorInt;
+
+        if (PhotonNetwork.IsMasterClient)
+            localPlayerColor = masterColor;
+        else
+            localPlayerColor = (masterColor == PieceColor.White) ? PieceColor.Black : PieceColor.White;
+
+        SetCameraForColor(localPlayerColor);
+
+        currentTurn = PieceColor.White;
+
+        SetTurn(currentTurn);
+    }
+
+    private void SetCameraForColor(PieceColor color)
+    {
+        if (_switchCamera != null)
+        {
+            _switchCamera.cameraIndex = (color == PieceColor.White) ? 0 : 1;
+            _switchCamera.SwitchCameraPosition();
+        }
+    }
+
 
     public void SwitchTurn()
     {

@@ -54,6 +54,7 @@ public class King : ChessPiece
     {
         isCastlingPathBlocked = IsPathBlocked(kingPos, blockingPos);
         castlingRook = GetPieceAtPosition(rookPos);
+        if (castlingRook == null) return false;
         castlingRookPosition = futureRookPos;
         rookMoved = castlingRook != null && castlingRook.hasRookMoved;
         if (rookMoved || gameManager.IsKingInCheck(pieceColor) || isCastlingPathBlocked || castlingRook.pieceType != PieceType.Rook)

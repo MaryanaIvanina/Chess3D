@@ -46,6 +46,7 @@ MonoBehaviour:
   - RPC_SetSelected
   - RPC_ShowGameOver
   - RPC_DestroyPawn
+  - RPC_SetPlayerColors
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

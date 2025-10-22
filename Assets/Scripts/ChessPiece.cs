@@ -109,17 +109,17 @@ public abstract class ChessPiece : MonoBehaviourPun
     {
         if (pieceType == PieceType.Knight) return false;
 
-        float distance = Vector3.Distance(from, to);
-        Vector3 direction = (to - from).normalized;
-        Ray ray = new Ray(from + Vector3.up * 5, direction);
+        Vector3 direction = (to - from).normalized * 10f;
+        Vector3 current = from + direction;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, distance - 5f))
-            return true;
-        else
+        while (Vector3.Distance(current, to) > 5f)
         {
-            Debug.DrawRay(ray.origin, direction * (distance - 5f), Color.green, 10f);
-            return false;
+            if (GetPieceAtPosition(current) != null)
+                return true;
+            current += direction;
         }
+
+        return false;
     }
 
     protected virtual bool IsPositionOccupied(PieceColor currentColor, Vector3 targetPos)
@@ -150,8 +150,8 @@ public abstract class ChessPiece : MonoBehaviourPun
         if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
         {
             bool isMasterClient = PhotonNetwork.IsMasterClient;
-            bool canMove = (isMasterClient && pieceColor == PieceColor.White) ||
-                          (!isMasterClient && pieceColor == PieceColor.Black);
+            bool canMove = (pieceColor == ChessGameManager.Instance.localPlayerColor);
+
 
             return canMove && gameManager.currentTurn == pieceColor;
         }
