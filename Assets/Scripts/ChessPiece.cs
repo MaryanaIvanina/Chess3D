@@ -5,7 +5,7 @@ using Photon.Pun;
 public enum PieceColor { White, Black }
 public enum PieceType { Pawn, Rook, Knight, Bishop, Queen, King }
 
-public abstract class ChessPiece : MonoBehaviourPun 
+public abstract class ChessPiece : MonoBehaviourPun
 {
     [Header("Piece Settings")]
     public PieceColor pieceColor;
@@ -56,16 +56,33 @@ public abstract class ChessPiece : MonoBehaviourPun
 
     private void SelectPiece()
     {
-        isSelected = true;
-        transform.Rotate((pieceColor == PieceColor.Black ? -rotationAmount : rotationAmount), 0, 0);
-        transform.position += new Vector3(0, moveUpAmount, 0);
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+            photonView.RPC("RPC_SetSelected", RpcTarget.AllBuffered, true);
+        else
+            ApplySelectionState(true);
     }
 
     private void DeselectPiece()
     {
-        isSelected = false;
-        transform.rotation = startRotation;
-        transform.position = new Vector3(transform.position.x, startPosition.y, transform.position.z);
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+            photonView.RPC("RPC_SetSelected", RpcTarget.AllBuffered, false);
+        else
+            ApplySelectionState(false);
+    }
+
+    private void ApplySelectionState(bool selected)
+    {
+        isSelected = selected;
+        if (selected)
+        {
+            transform.Rotate((pieceColor == PieceColor.Black ? -rotationAmount : rotationAmount), 0, 0);
+            transform.position += new Vector3(0, moveUpAmount, 0);
+        }
+        else
+        {
+            transform.rotation = startRotation;
+            transform.position = new Vector3(transform.position.x, startPosition.y, transform.position.z);
+        }
     }
 
     protected virtual void TryMoveTo(Vector3 targetWorldPos)
@@ -183,7 +200,21 @@ public abstract class ChessPiece : MonoBehaviourPun
         }
 
         transform.position = targetPos;
-        ChessGameManager.Instance.SwitchTurn();
     }
 
+    [PunRPC]
+    public void RPC_SetSelected(bool selected)
+    {
+        ApplySelectionState(selected);
+    }
+
+    [PunRPC]
+    public void RPC_Castling(int rookViewID, Vector3 rookTargetPos)
+    {
+        PhotonView rookView = PhotonView.Find(rookViewID);
+        if (rookView != null)
+        {
+            rookView.transform.position = rookTargetPos;
+        }
+    }
 }

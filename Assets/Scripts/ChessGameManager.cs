@@ -40,6 +40,7 @@ public class ChessGameManager : MonoBehaviourPun
     public GameObject stars;
 
     private Pawn pawnToPromote;
+    private bool gameOver = false;
 
     private void Awake()
     {
@@ -55,7 +56,10 @@ public class ChessGameManager : MonoBehaviourPun
 
     public void SwitchTurn()
     {
+        if (gameOver) return;
+
         currentTurn = currentTurn == PieceColor.White ? PieceColor.Black : PieceColor.White;
+
         if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
         {
             photonView.RPC("SyncTurn", RpcTarget.All, currentTurn == PieceColor.White);
@@ -67,19 +71,24 @@ public class ChessGameManager : MonoBehaviourPun
 
         SetTurn(currentTurn);
         CheckForCheckmate();
+
         if (GameMode.Instance.gameMode == 2)
         {
             _switchCamera.cameraIndex = currentTurn == PieceColor.White ? 0 : 1;
             _switchCamera.SwitchCameraPosition();
         }
     }
+
     [PunRPC]
     public void SyncTurn(bool isWhiteTurn)
     {
+        if (gameOver) return;
+
         currentTurn = isWhiteTurn ? PieceColor.White : PieceColor.Black;
         SetTurn(currentTurn);
         CheckForCheckmate();
     }
+
     private void SetTurn(PieceColor color)
     {
         ChessPiece[] allPieces = FindObjectsByType<ChessPiece>(FindObjectsSortMode.None);
@@ -92,26 +101,76 @@ public class ChessGameManager : MonoBehaviourPun
 
     private void CheckForCheckmate()
     {
+        if (gameOver) return;
+
         isInCheck = IsKingInCheck(currentTurn);
 
         if (isInCheck)
         {
             if (!HasAnyValidMove())
             {
-                checkmate.SetActive(true);
-                stars.SetActive(true);
-                leftStar.SetBool("Checkmate", checkmate.activeInHierarchy);
-                rightStar.SetBool("Checkmate", checkmate.activeInHierarchy);
-                (currentTurn == PieceColor.White ? whiteCheckmate : blackCheckmate).SetActive(true);
+                string result = currentTurn == PieceColor.White ? "whiteCheckmate" : "blackCheckmate";
+                HandleGameOver(result);
             }
-            else (currentTurn == PieceColor.White ? whiteKingIsInCheck : blackKingIsInCheck).SetActive(true);
+            else
+            {
+                (currentTurn == PieceColor.White ? whiteKingIsInCheck : blackKingIsInCheck).SetActive(true);
+            }
         }
         else if (!HasAnyValidMove())
         {
-            stalemate.SetActive(true);
-            checkmate.SetActive(true);
+            HandleGameOver("stalemate");
         }
-        else HideCheckmateMessage();
+        else
+        {
+            HideCheckmateMessage();
+        }
+    }
+    private void HandleGameOver(string result)
+    {
+        if (gameOver) return;
+        gameOver = true;
+
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("RPC_ShowGameOver", RpcTarget.All, result);
+            }
+        }
+        else
+        {
+            ShowGameOverLocal(result);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_ShowGameOver(string result)
+    {
+        ShowGameOverLocal(result);
+    }
+
+    private void ShowGameOverLocal(string result)
+    {
+        HideCheckmateMessage();
+
+        checkmate.SetActive(true);
+        stars.SetActive(true);
+        leftStar.SetBool("Checkmate", true);
+        rightStar.SetBool("Checkmate", true);
+
+        switch (result)
+        {
+            case "whiteCheckmate":
+                whiteCheckmate.SetActive(true);
+                break;
+            case "blackCheckmate":
+                blackCheckmate.SetActive(true);
+                break;
+            case "stalemate":
+                stalemate.SetActive(true);
+                break;
+        }
     }
 
     private bool HasAnyValidMove()
@@ -218,19 +277,52 @@ public class ChessGameManager : MonoBehaviourPun
         Quaternion rotation = pawnToPromote.transform.rotation;
         PieceColor color = pawnToPromote.pieceColor;
 
-        Destroy(pawnToPromote.gameObject);
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+        {
+            PhotonView pawnView = pawnToPromote.GetComponent<PhotonView>();
+            if (pawnView != null)
+            {
+                if (!pawnView.AmOwner)
+                    photonView.RPC("RPC_DestroyPawn", RpcTarget.MasterClient, pawnView.ViewID);
+                else
+                    PhotonNetwork.Destroy(pawnToPromote.gameObject);
+            }
+        }
+        else Destroy(pawnToPromote.gameObject);
+
 
         GameObject prefab = GetPrefabForPieceType(newPieceType, newPieceColor);
         if (prefab != null)
         {
-            GameObject newPiece = Instantiate(prefab, position, rotation);
-            ChessPiece piece = newPiece.GetComponent<ChessPiece>();
-            piece.pieceColor = newPieceColor;
-            piece.pieceType = newPieceType;
+            if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+            {
+                GameObject newPiece = PhotonNetwork.Instantiate(prefab.name, position, rotation);
+                ChessPiece piece = newPiece.GetComponent<ChessPiece>();
+                piece.pieceColor = newPieceColor;
+                piece.pieceType = newPieceType;
+            }
+            else
+            {
+                GameObject newPiece = Instantiate(prefab, position, rotation);
+                ChessPiece piece = newPiece.GetComponent<ChessPiece>();
+                piece.pieceColor = newPieceColor;
+                piece.pieceType = newPieceType;
+            }
         }
         HidePromotionUI();
         pawnToPromote = null;
     }
+
+    [PunRPC]
+    private void RPC_DestroyPawn(int pawnViewID)
+    {
+        PhotonView pawnView = PhotonView.Find(pawnViewID);
+        if (pawnView != null)
+        {
+            PhotonNetwork.Destroy(pawnView.gameObject);
+        }
+    }
+
 
     private GameObject GetPrefabForPieceType(PieceType type, PieceColor color)
     {

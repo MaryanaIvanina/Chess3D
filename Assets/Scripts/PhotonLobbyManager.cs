@@ -28,7 +28,9 @@ public class PhotonLobbyManager : MonoBehaviourPunCallbacks
         createRoomButton.interactable = false;
         joinRoomButton.interactable = false;
 
-        PhotonNetwork.ConnectUsingSettings();
+        if (!PhotonNetwork.IsConnected)
+            PhotonNetwork.ConnectUsingSettings();
+
         PhotonNetwork.AutomaticallySyncScene = true;
 
     }

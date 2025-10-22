@@ -1,4 +1,5 @@
 using UnityEngine;
+using Photon.Pun;
 
 public class King : ChessPiece
 {
@@ -19,15 +20,12 @@ public class King : ChessPiece
     {
         float deltaX = Mathf.Abs(to.x - from.x);
         float deltaZ = Mathf.Abs(to.z - from.z);
-        if (!hasKingMoved)
+        if ((deltaX == 20 && deltaZ == 0) && !hasKingMoved)
         {
             if (from.x > to.x)
-                IsCastlingPossible(from, to - Vector3.right * 10, to - Vector3.right * 20, to + Vector3.right * 10);
+                isCastling = IsCastlingPossible(from, to - Vector3.right * 10, to - Vector3.right * 20, to + Vector3.right * 10);
             else
-                IsCastlingPossible(from, to, to + Vector3.right * 10, to - Vector3.right * 10);
-
-            isCastling = (deltaX == 20 && deltaZ == 0) && castlingRook != null && !rookMoved && 
-                !gameManager.IsKingInCheck(pieceColor) && !isCastlingPathBlocked;
+                isCastling = IsCastlingPossible(from, to, to + Vector3.right * 10, to - Vector3.right * 10);
         }
 
         return (deltaX <= 10 && deltaZ <= 10 && (deltaX + deltaZ > 0)) || isCastling;
@@ -40,15 +38,26 @@ public class King : ChessPiece
 
         if (isCastling)
             castlingRook.transform.position = castlingRookPosition;
+
+        if (GameMode.Instance.gameMode == 3 && PhotonNetwork.IsConnected)
+        {
+            PhotonView rookView = castlingRook.GetComponent<PhotonView>();
+            if (rookView != null)
+                photonView.RPC("RPC_Castling", RpcTarget.All, rookView.ViewID, castlingRookPosition);
+        }
+
         isCastling = false;
         castlingRook = null;
     }
 
-    private void IsCastlingPossible(Vector3 kingPos, Vector3 blockingPos, Vector3 rookPos, Vector3 futureRookPos)
+    private bool IsCastlingPossible(Vector3 kingPos, Vector3 blockingPos, Vector3 rookPos, Vector3 futureRookPos)
     {
         isCastlingPathBlocked = IsPathBlocked(kingPos, blockingPos);
         castlingRook = GetPieceAtPosition(rookPos);
         castlingRookPosition = futureRookPos;
         rookMoved = castlingRook != null && castlingRook.hasRookMoved;
+        if (rookMoved || gameManager.IsKingInCheck(pieceColor) || isCastlingPathBlocked || castlingRook.pieceType != PieceType.Rook)
+            return false;
+        return true;
     }
 }
