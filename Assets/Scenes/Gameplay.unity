@@ -1243,6 +1243,7 @@ MonoBehaviour:
   currentTurn: 0
   isInCheck: 0
   _chessBotAI: {fileID: 398904254}
+  localPlayerColor: 0
   queenPrefab: {fileID: 1872036000}
   rookPrefab: {fileID: 827265177}
   bishopPrefab: {fileID: 317630359}
@@ -2185,7 +2186,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
+  m_Color: {r: 0.87169814, g: 0.87169814, b: 0.87169814, a: 1}
   m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
@@ -2198,7 +2199,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -2229,7 +2230,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 5166
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0

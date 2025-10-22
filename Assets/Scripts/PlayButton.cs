@@ -26,4 +26,8 @@ public class PlayButton : MonoBehaviour
         _gameMode.gameMode = 3;
         SceneManager.LoadScene("LobbyScene");
     }
+    public void OnQuitButtonClicked()
+    {
+        Application.Quit();
+    }
 }
