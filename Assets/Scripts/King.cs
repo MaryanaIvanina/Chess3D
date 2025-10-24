@@ -52,13 +52,33 @@ public class King : ChessPiece
 
     private bool IsCastlingPossible(Vector3 kingPos, Vector3 blockingPos, Vector3 rookPos, Vector3 futureRookPos)
     {
-        isCastlingPathBlocked = IsPathBlocked(kingPos, blockingPos);
-        castlingRook = GetPieceAtPosition(rookPos);
-        if (castlingRook == null) return false;
-        castlingRookPosition = futureRookPos;
-        rookMoved = castlingRook != null && castlingRook.hasRookMoved;
-        if (rookMoved || gameManager.IsKingInCheck(pieceColor) || isCastlingPathBlocked || castlingRook.pieceType != PieceType.Rook)
+        if (gameManager == null)
             return false;
+
+        isCastlingPathBlocked = true;
+
+        try
+        {
+            isCastlingPathBlocked = IsPathBlocked(kingPos, blockingPos);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"Помилка при перевірці рокіровки: {e.Message}");
+            isCastlingPathBlocked = true;
+        }
+
+        castlingRook = GetPieceAtPosition(rookPos);
+        if (castlingRook == null)
+            return false;
+
+        castlingRookPosition = futureRookPos;
+        rookMoved = castlingRook.hasRookMoved;
+
+        if (rookMoved || gameManager.IsKingInCheck(pieceColor) ||
+            isCastlingPathBlocked || castlingRook.pieceType != PieceType.Rook)
+            return false;
+
         return true;
     }
+
 }

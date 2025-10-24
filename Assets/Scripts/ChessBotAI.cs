@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class ChessBotAI : MonoBehaviour
 {
@@ -28,11 +27,25 @@ public class ChessBotAI : MonoBehaviour
     private void Start()
     {
         gameManager = ChessGameManager.Instance;
-        botColor = GameMode.Instance.botColor == 1 ? PieceColor.White : PieceColor.Black;
+
+        if (GameMode.Instance.gameMode == 1)
+        {
+            botColor = GameMode.Instance.botColor == 1 ? PieceColor.White : PieceColor.Black;
+        }
+        else
+        {
+            this.enabled = false;
+        }
     }
 
     private void Update()
     {
+        if (GameMode.Instance.gameMode != 1)
+        {
+            this.enabled = false;
+            return;
+        }
+
         if (gameManager == null) return;
 
         if (gameManager.currentTurn == botColor && !isThinking)
@@ -47,7 +60,6 @@ public class ChessBotAI : MonoBehaviour
         isThinking = true;
 
         List<MoveCandidate> moves = GenerateAllLegalMoves(botColor);
-
 
         if (moves.Count == 0)
         {
@@ -130,7 +142,7 @@ public class ChessBotAI : MonoBehaviour
     {
         state.move.piece.transform.position = state.originalPos;
 
-        if (state.move.capturedPiece != null) 
+        if (state.move.capturedPiece != null)
             state.move.capturedPiece.gameObject.SetActive(state.capturedWasActive);
 
         Canvas.ForceUpdateCanvases();
@@ -144,7 +156,6 @@ public class ChessBotAI : MonoBehaviour
         PieceColor sideToMove = isMaximizing ? botColor : (botColor == PieceColor.White ? PieceColor.Black : PieceColor.White);
 
         List<MoveCandidate> moves = GenerateAllLegalMoves(sideToMove);
-        
 
         if (moves.Count == 0)
         {
