@@ -14,4 +14,10 @@ public class GameMode : MonoBehaviour
     }
     public int gameMode = 0;
     public int botColor = 0;
+
+    public void ResetGameMode()
+    {
+        gameMode = 0;
+        botColor = 0;
+    }
 }
