@@ -186,6 +186,9 @@ public abstract class ChessPiece : MonoBehaviourPun
             photonView.RPC("SyncMove", RpcTarget.Others, targetPos, capturedViewID);
         }
 
+        if (gameManager == null)
+            gameManager = ChessGameManager.Instance;
+
         gameManager.SwitchTurn();
     }
 
