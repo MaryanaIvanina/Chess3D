@@ -52,10 +52,9 @@ The bot utilizes a recursive **Minimax algorithm** to calculate moves:
 ---
 
 ## Tech Stack
-- **Engine:** Unity 2022+
+- **Engine:** Unity 6000.057f1
 - **Language:** C#
 - **Networking:** Photon PUN 2
-- **Version Control:** Git
 
 ## Installation
 1. Download the latest Release from the sidebar.
